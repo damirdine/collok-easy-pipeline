@@ -1,5 +1,6 @@
 # Dossiers et fichiers générés par Node.js
 node_modules/
+mysqldata/
 
 # Fichiers de configuration spécifiques à l'environnement de développement
 .env

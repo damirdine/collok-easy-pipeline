@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   api-express:
@@ -6,13 +6,25 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - '3000:3000' 
-     
+      - "3000:3000"
+
     volumes:
       - type: bind
         source: .
         target: /usr/src/app
-         
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
 networks:
   docker_accessnet:
     external: true

@@ -1,0 +1,22 @@
+# Dossiers et fichiers générés par Node.js
+node_modules/
+
+# Fichiers de configuration spécifiques à l'environnement de développement
+.env
+
+# Fichiers de logs
+logs/
+
+# Fichiers de sauvegarde temporaires
+*.swp
+
+# Dossiers spécifiques à Sequelize 
+config/config.json
+migrations/
+seeders/
+
+# Dossiers et fichiers spécifiques 
+.vscode/
+
+# Fichiers de sauvegarde
+.DS_Store

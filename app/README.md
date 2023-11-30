@@ -19,7 +19,7 @@ export default (sequelize, Sequelize) => {
       allowNull: false,
     },
     updated_at: {
-      type: DataType.DATE,
+      type: DataTypes.DATE,
       defaultValue: Sequelize.fn("NOW"),
       allowNull: false,
     },

@@ -12,9 +12,9 @@ logs/
 *.swp
 
 # Dossiers spécifiques à Sequelize 
-config/config.json
-migrations/
-seeders/
+#config/config.json
+#migrations/
+#seeders/
 
 # Dossiers et fichiers spécifiques 
 .vscode/

@@ -6,3 +6,5 @@
 - [] use case
 - [] entity class
 - [] 
+
+ npx sequelize-cli init 

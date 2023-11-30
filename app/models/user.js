@@ -29,10 +29,27 @@ export default (sequelize, Sequelize) => {
       pseudo: { type: DataTypes.STRING },
       gender: { type: DataTypes.STRING },
       avatar: { type: DataTypes.STRING },
+      colocation_id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        references: {
+          model: "Colocation",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+        allowNull: true,
+      },
     },
     {
       tableName: "user",
     }
   );
+  User.associate = (models) => {
+    User.belongsTo(models.Colocation, {
+      foreignKey: "colocation_id",
+      as: "colocation",
+    });
+  };
+
   return User;
 };

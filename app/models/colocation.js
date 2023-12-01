@@ -1,15 +1,14 @@
 // models/colocation.js
 export default (sequelize, Sequelize) => {
   const { DataTypes } = Sequelize;
-  const Colocation = sequelize.define(
-    "Colocation",
+  const colocation = sequelize.define(
+    "colocation",
     {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
         primaryKey: true,
         autoIncrement: true,
       },
-      name: { type: DataTypes.STRING, allowNull: false },
       createdAt: {
         field: "created_at",
         type: Sequelize.DataTypes.DATE,
@@ -22,15 +21,16 @@ export default (sequelize, Sequelize) => {
         defaultValue: Sequelize.fn("NOW"),
         allowNull: false,
       },
+      name: { type: DataTypes.STRING, allowNull: false },
     },
     {
       tableName: "colocation",
     }
   );
+  colocation.associate = (models) => {
+    colocation.hasMany(models.user, { foreignKey: "colocation_id" });
+    colocation.hasMany(models.objective, { foreignKey: "colocation_id" , as: "objectives"});
+    };
 
-  Colocation.associate = (models) => {
-    Colocation.hasMany(models.User, { as: "users" });
-  };
-
-  return Colocation;
+  return colocation;
 };

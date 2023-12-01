@@ -1,4 +1,3 @@
-import user from "./user";
 
 export default (sequelize, Sequelize) => {
   const { DataTypes } = Sequelize;

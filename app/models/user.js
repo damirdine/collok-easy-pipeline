@@ -24,7 +24,7 @@ export default (sequelize, Sequelize) => {
       last_name: { type: DataTypes.STRING, allowNull: false },
       email: { type: DataTypes.STRING, unique: true, allowNull: false },
       password: { type: DataTypes.STRING },
-      birth_day: DataTypes.DATE,
+      birthday: { type : DataTypes.DATE},
       phone: { type: Sequelize.STRING },
       pseudo: { type: DataTypes.STRING },
       gender: { type: DataTypes.STRING },

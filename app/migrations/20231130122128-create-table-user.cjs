@@ -24,7 +24,7 @@ module.exports = {
       last_name: { type: Sequelize.STRING, allowNull: false },
       email: { type: Sequelize.STRING, unique: true, allowNull: false },
       password: { type: Sequelize.STRING },
-      birth_day: Sequelize.DATE,
+      birthday: {type : Sequelize.DATE},
       password: { type: Sequelize.STRING },
       phone: { type: Sequelize.STRING },
       pseudo: { type: Sequelize.STRING },

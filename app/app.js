@@ -4,29 +4,7 @@ import fs from "fs";
 import bodyParser from "body-parser";
 
 import models from "./models/index.js";
-
-(async () => {
-  // let data;
-  // data = await models.colocation.findAll({
-  //   include: [
-  //     "users",
-  //     {
-  //       model: models.objective,
-  //       as: "objectives",
-  //       include: ["task", "outgoing"],
-  //     },
-  //   ],
-  // });
-  // data = await models.objective.findAll({include: ['task', 'outgoing']})
-  // fs.writeFileSync(
-  //   JSON.stringify(
-  //     data.map((el) => el.toJSON()),
-  //     null,
-  //     2
-  //   )
-  // );
-  // console.log(data.map((el) => el.toJSON())[0]);
-})();
+import authRouter from "./routes/auth.js";
 
 const app = express();
 
@@ -53,7 +31,9 @@ router.get("/hello", async (req, res) => {
 });
 app.use("/", router);
 
-// Authentification à la base de données
+app.use("/auth", authRouter);
+
+// app.use("/api", apiRouter)
 
 // Démarrage du serveur sur le port 3000
 app.listen(3000, () => {

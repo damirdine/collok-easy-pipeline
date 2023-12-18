@@ -1,3 +1,60 @@
+# Documentation d'installation du projet Sequelize
+
+### Prérequis
+
+- Node.js : Assurez-vous que Node.js est installé sur votre machine. Vous pouvez le télécharger depuis [nodejs.org](https://nodejs.org/).
+- npm : npm est le gestionnaire de paquets pour Node.js et est livré avec l'installation de Node.js.
+- Docker : Si Docker n'est pas installé, téléchargez et installez-le depuis [docker.com](https://www.docker.com/get-started).
+
+## Étapes de configuration (Setup)
+
+### 1. Cloner le dépôt
+
+Clonez le dépôt du projet Sequelize à partir de la source :
+
+```bash
+git clone <repository-url>
+cd <project-folder>
+```
+
+### 2. Installer les dépendances
+
+Exécutez la commande suivante pour installer les dépendances du projet :
+
+```bash
+npm install
+```
+
+### 3. Démarrer Docker Compose
+
+Docker Compose est utilisé pour configurer la base de données. Exécutez la commande suivante pour démarrer les services requis définis dans le fichier `docker-compose.yml` :
+
+```bash
+docker-compose up
+```
+
+Si vous devez reconstruire les images, utilisez l'option `--build` :
+
+```bash
+docker-compose up --build
+```
+
+### 4. Exécuter les migrations de la base de données
+
+Les migrations Sequelize sont utilisées pour gérer les changements de schéma de base de données. Exécutez la commande suivante pour appliquer les migrations et configurer les tables de la base de données :
+
+```bash
+npx sequelize-cli db:migrate
+```
+
+### 5. Exécuter les semences (optionnel)
+
+Les semences sont des scripts qui peuplent la base de données avec des données initiales. Si votre projet inclut des données de départ, exécutez la commande suivante :
+
+```bash
+npx sequelize-cli db:seed:all
+```
+
 ## Migrations
 
 - Créer un modèle

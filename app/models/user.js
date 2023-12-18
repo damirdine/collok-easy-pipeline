@@ -1,6 +1,6 @@
 export default (sequelize, Sequelize) => {
   const { DataTypes } = Sequelize;
-  const User = sequelize.define(
+  const user = sequelize.define(
     "user",
     {
       id: {
@@ -20,36 +20,27 @@ export default (sequelize, Sequelize) => {
         defaultValue: Sequelize.fn("NOW"),
         allowNull: false,
       },
-      first_name: { type: DataTypes.STRING, allowNull: false },
-      last_name: { type: DataTypes.STRING, allowNull: false },
+      firstname: { type: DataTypes.STRING, allowNull: false },
+      lastname: { type: DataTypes.STRING, allowNull: false },
       email: { type: DataTypes.STRING, unique: true, allowNull: false },
       password: { type: DataTypes.STRING },
-      birthday: { type : DataTypes.DATE},
+      birthday: { type: DataTypes.DATE },
       phone: { type: Sequelize.STRING },
       pseudo: { type: DataTypes.STRING },
       gender: { type: DataTypes.STRING },
       avatar: { type: DataTypes.STRING },
-      colocation_id: {
-        type: DataTypes.INTEGER.UNSIGNED,
-        references: {
-          model: "Colocation",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
-        allowNull: true,
-      },
     },
     {
       tableName: "user",
     }
   );
-  User.associate = (models) => {
-    User.belongsTo(models.Colocation, {
-      foreignKey: "colocation_id",
-      as: "colocation",
+  user.associate = (models) => {
+    user.belongsToMany(models.colocation, { through: "user_colocation" });
+    user.hasOne(models.colocation, {
+      foreignKey: "admin_user_id",
+      as: "admin_user",
     });
   };
 
-  return User;
+  return user;
 };

@@ -1,27 +1,48 @@
-
+//models/outgoing.js
 export default (sequelize, Sequelize) => {
   const { DataTypes } = Sequelize;
-  const Outgoing = sequelize.define("outgoing", {
-    id: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      primaryKey: true,
-      autoIncrement: true,
-      allowNull: false,
+  const outgoing = sequelize.define(
+    "outgoing",
+    {
+      id: {
+        type: Sequelize.INTEGER.UNSIGNED,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      createdAt: {
+        field: "created_at",
+        type: Sequelize.DataTypes.DATE,
+        defaultValue: Sequelize.fn("NOW"),
+        allowNull: false,
+      },
+      updatedAt: {
+        field: "updated_at",
+        type: Sequelize.DataTypes.DATE,
+        defaultValue: Sequelize.fn("NOW"),
+        allowNull: false,
+      },
+      final_expense: { type: DataTypes.FLOAT, allowNull: false },
+      objective_id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        references: {
+          model: "objective",
+          key: "id",
+        },
+      },
     },
-    created_at: {
-      type: DataTypes.DATE,
-      defaultValue: Sequelize.fn("NOW"),
-      allowNull: false,
-    },
-    updated_at: {
-      type: DataTypes.DATE,
-      defaultValue: Sequelize.fn("NOW"),
-      allowNull: false,
-    },
-    name: { type: DataTypes.STRING, allowNull: false },
-    description: { type: DataTypes.STRING, allowNull: true },
-    deadline: { type: DataTypes.DATE, allowNull: true },
-    final_expense: { type: DataTypes.FLOAT, allowNull: false },
-  });
-  return Outgoing;
+
+    {
+      tableName: "outgoing",
+    }
+  );
+
+  // Todo l'association
+  outgoing.associate = (models) => {
+    outgoing.hasOne(models.objective, {
+      foreignKey: "id",
+      constraints: false,
+    });
+  };
+
+  return outgoing;
 };

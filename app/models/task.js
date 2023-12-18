@@ -22,6 +22,13 @@ export default (sequelize, Sequelize) => {
         allowNull: false,
       },
       estimated_duration: { type: DataTypes.INTEGER },
+      objective_id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        references: {
+          model: "objective",
+          key: "id",
+        },
+      },
     },
     {
       tableName: "task",

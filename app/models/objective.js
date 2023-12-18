@@ -25,6 +25,8 @@ export default (sequelize, Sequelize) => {
       name: { type: DataTypes.STRING, allowNull: false },
       description: { type: DataTypes.STRING, allowNull: true },
       deadline: { type: DataTypes.DATE, allowNull: true },
+      colocation_id: { type: DataTypes.INTEGER.UNSIGNED },
+      created_by: { type: DataTypes.INTEGER.UNSIGNED },
     },
     {
       tableName: "objective",
@@ -34,7 +36,7 @@ export default (sequelize, Sequelize) => {
   objective.associate = (models) => {
     objective.belongsTo(models.colocation, { foreignKey: "colocation_id" });
     objective.belongsTo(models.user, { foreignKey: "created_by" });
-    
+
     objective.hasOne(models.task, {
       foreignKey: "objective_id",
       constraints: false,

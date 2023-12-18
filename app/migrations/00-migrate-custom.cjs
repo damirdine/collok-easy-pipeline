@@ -24,55 +24,13 @@ module.exports = {
         allowNull: false,
       },
       admin_user_id: {
-        type: Sequelize.INTEGER,
-      },
-    });
-
-    // Create Objective table
-    await queryInterface.createTable("objective", {
-      id: {
         type: Sequelize.INTEGER.UNSIGNED,
-        primaryKey: true,
-        autoIncrement: true,
-        allowNull: false,
-      },
-      created_at: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.fn("NOW"),
-        allowNull: false,
-      },
-      updated_at: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.fn("NOW"),
-        allowNull: false,
-      },
-      users_assigned: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      description: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
-      deadline: {
-        type: Sequelize.DATE,
-        allowNull: true,
-      },
-      colocation_id: {
-        type: Sequelize.INTEGER.UNSIGNED,
-        //   references: {
-        //     model: "colocation",
-        //     key: "id",
-        //   },
-        //   onUpdate: "CASCADE",
-        //   onDelete: "CASCADE",
-      },
-      created_by: {
-        type: Sequelize.INTEGER.UNSIGNED,
+        // references: {
+        //   model: "user",
+        //   key: "id",
+        // },
+        // onUpdate: "CASCADE",
+        // onDelete: "CASCADE",
       },
     });
 
@@ -114,12 +72,79 @@ module.exports = {
       avatar: { type: Sequelize.STRING },
       colocation_id: {
         type: Sequelize.INTEGER.UNSIGNED,
-
-        // references: {
-        //   model: "colocation",
-        //   key: "id",
+        references: {
+          model: "colocation",
+          key: "id",
+        },
       },
       // Add other user fields as needed
+    });
+
+    // Add foreign key to Objective table
+    await queryInterface.addConstraint("colocation", {
+      fields: ["admin_user_id"],
+      type: "foreign key",
+      name: "fk_colocation_admin_user",
+      references: {
+        table: "user",
+        field: "id",
+      },
+      onDelete: "SET NULL",
+      onUpdate: "CASCADE",
+    });
+
+    // Create Objective table
+    await queryInterface.createTable("objective", {
+      id: {
+        type: Sequelize.INTEGER.UNSIGNED,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+      },
+      created_at: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn("NOW"),
+        allowNull: false,
+      },
+      updated_at: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn("NOW"),
+        allowNull: false,
+      },
+      users_assigned: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      description: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      deadline: {
+        type: Sequelize.DATE,
+        allowNull: true,
+      },
+      colocation_id: {
+        type: Sequelize.INTEGER.UNSIGNED,
+        references: {
+          model: "colocation",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
+      created_by: {
+        type: Sequelize.INTEGER.UNSIGNED,
+        references: {
+          model: "user",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
     });
 
     await queryInterface.createTable("task", {
@@ -140,12 +165,12 @@ module.exports = {
       },
       estimated_duration: { type: Sequelize.INTEGER },
       objective_id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
-        // references: {
-        //   model: "objective",
-        //   key: "id",
-        // },
+        references: {
+          model: "objective",
+          key: "id",
+        },
       },
     });
     // Add outgoing foreign key to Objective table
@@ -167,77 +192,14 @@ module.exports = {
       },
       final_expense: { type: Sequelize.FLOAT, allowNull: false },
       objective_id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
-        // references: {
-        //   model: "objective",
-        //   key: "id",
-        // },
+        references: {
+          model: "objective",
+          key: "id",
+        },
       },
     });
-    // await queryInterface.addConstraint("outgoing", {
-    //   fields: ["objective_id"],
-    //   type: "foreign key",
-    //   name: "fk_objective_outgoing",
-    //   references: {
-    //     table: "objective",
-    //     field: "id",
-    //   },
-    //   onDelete: "CASCADE",
-    //   onUpdate: "CASCADE",
-    // });
-
-    // Add foreign key to Objective table
-    await queryInterface.addConstraint("objective", {
-      fields: ["colocation_id"],
-      type: "foreign key",
-      name: "fk_objective_colocation",
-      references: {
-        table: "colocation",
-        field: "id",
-      },
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
-    });
-
-    // Add foreign key to Objective table
-    await queryInterface.addConstraint("objective", {
-      fields: ["created_by"],
-      type: "foreign key",
-      name: "fk_objective_user",
-      references: {
-        table: "user",
-        field: "id",
-      },
-      onDelete: "SET NULL",
-      onUpdate: "CASCADE",
-    });
-
-    // Add foreign key to Objective table
-    await queryInterface.addConstraint("user", {
-      fields: ["colocation_id"],
-      type: "foreign key",
-      name: "fk_user_colocation",
-      references: {
-        table: "colocation",
-        field: "id",
-      },
-      onDelete: "SET NULL",
-      onUpdate: "CASCADE",
-    });
-
-    // // Add foreign key to Objective table
-    // await queryInterface.addConstraint("colocation", {
-    //   fields: ["admin_user_id"],
-    //   type: "foreign key",
-    //   name: "fk_colocation_admin_user",
-    //   references: {
-    //     table: "user",
-    //     field: "id",
-    //   },
-    //   onDelete: "SET NULL",
-    //   onUpdate: "CASCADE",
-    // });
   },
 
   down: async (queryInterface, Sequelize) => {

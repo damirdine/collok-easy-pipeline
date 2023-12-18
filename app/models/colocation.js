@@ -22,6 +22,14 @@ export default (sequelize, Sequelize) => {
         allowNull: false,
       },
       name: { type: DataTypes.STRING, allowNull: false },
+      admin_user_id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
+        references: {
+          model: "user",
+          key: "id",
+        },
+      },
     },
     {
       tableName: "colocation",
@@ -29,8 +37,15 @@ export default (sequelize, Sequelize) => {
   );
   colocation.associate = (models) => {
     colocation.hasMany(models.user, { foreignKey: "colocation_id" });
-    colocation.hasMany(models.objective, { foreignKey: "colocation_id" , as: "objectives"});
-    };
+    colocation.hasMany(models.objective, {
+      foreignKey: "colocation_id",
+      as: "objectives",
+    });
+    colocation.belongsTo(models.user, {
+      foreignKey: "admin_user_id",
+      as: "admin_user",
+    });
+  };
 
   return colocation;
 };

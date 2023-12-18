@@ -36,6 +36,10 @@ export default (sequelize, Sequelize) => {
   );
   user.associate = (models) => {
     user.belongsToMany(models.colocation, { through: "user_colocation" });
+    user.hasOne(models.colocation, {
+      foreignKey: "admin_user_id",
+      as: "admin_user",
+    });
   };
 
   return user;

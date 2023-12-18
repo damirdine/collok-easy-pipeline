@@ -22,7 +22,15 @@ export default (sequelize, Sequelize) => {
         allowNull: false,
       },
       final_expense: { type: DataTypes.FLOAT, allowNull: false },
+      objective_id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        references: {
+          model: "objective",
+          key: "id",
+        },
+      },
     },
+
     {
       tableName: "outgoing",
     }

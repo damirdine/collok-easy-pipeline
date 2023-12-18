@@ -6,18 +6,17 @@ import bodyParser from "body-parser";
 import models from "./models/index.js";
 
 (async () => {
-  let data;
-  data = await models.colocation.findAll({
-    include: [
-      "users",
-      {
-        model: models.objective,
-        as: "objectives",
-        include: ["task", "outgoing"],
-      },
-    ],
-  });
-
+  // let data;
+  // data = await models.colocation.findAll({
+  //   include: [
+  //     "users",
+  //     {
+  //       model: models.objective,
+  //       as: "objectives",
+  //       include: ["task", "outgoing"],
+  //     },
+  //   ],
+  // });
   // data = await models.objective.findAll({include: ['task', 'outgoing']})
   // fs.writeFileSync(
   //   JSON.stringify(
@@ -26,8 +25,7 @@ import models from "./models/index.js";
   //     2
   //   )
   // );
-
-  console.log(data.map((el) => el.toJSON())[0]);
+  // console.log(data.map((el) => el.toJSON())[0]);
 })();
 
 const app = express();
@@ -35,8 +33,23 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 const router = express.Router();
-router.get("/", (req, res) => {
-  res.send("hello");
+router.get("/hello", async (req, res) => {
+  try {
+    const data = await models.colocation.findAll({
+      include: [
+        "users",
+        {
+          model: models.objective,
+          as: "objectives",
+          include: ["task", "outgoing"],
+        },
+        "admin_user",
+      ],
+    });
+    res.send({ data: data[0] });
+  } catch (error) {
+    res.send({ error });
+  }
 });
 app.use("/", router);
 

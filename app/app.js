@@ -1,17 +1,18 @@
 // Importations nécessaires
 import express from "express";
-import fs from "fs";
 import bodyParser from "body-parser";
 
 import models from "./models/index.js";
 import authRouter from "./routes/auth.js";
+import authMiddleware from "./middleware/auth.js";
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 const router = express.Router();
-router.get("/hello", async (req, res) => {
+
+router.get("/hello", authMiddleware, async (req, res) => {
   try {
     const data = await models.colocation.findAll({
       include: [

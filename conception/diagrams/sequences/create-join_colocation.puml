@@ -1,0 +1,53 @@
+@startuml diagramme sequence 
+actor Utilisateur
+participant "Application Collok'Easy" as App
+database Api_x_BaseDeDonnees
+
+== Création d'une Colocation ==
+autonumber
+Utilisateur -> App: Accéder à la fonctionnalité\n"Créer Colocation"
+
+activate App
+
+App -> Api_x_BaseDeDonnees: Ajouter Nouvelle Colocation
+
+activate Api_x_BaseDeDonnees
+
+alt Création réussie
+  Api_x_BaseDeDonnees --> App: Retourner\nNouvelle Colocation
+  App -> Utilisateur: Afficher informations\nsur la Nouvelle Colocation
+else Erreur lors de la création
+    alt Donnees client non valide
+        App -> Utilisateur: Afficher message\n"Erreur lors de la création de la Colocation.\nVeuillez vérifier les données fournies."
+    else Erreur serveur
+        Api_x_BaseDeDonnees --> App: Erreur Base De Données
+        App -> Utilisateur: Afficher message\n"Erreur lors de la création de la Colocation.\nVeuillez réessayer plus tard."
+    end
+end
+
+deactivate Api_x_BaseDeDonnees
+deactivate App
+
+
+== Rejoindre une Colocation ==
+autonumber
+Utilisateur -> App: Accéder à la fonctionnalité\n"Rejoindre Colocation"
+
+activate App
+
+App -> Api_x_BaseDeDonnees: Vérifier disponibilité\nColocation existante
+
+activate Api_x_BaseDeDonnees
+
+alt Colocation existante
+  Api_x_BaseDeDonnees --> App: Retourner informations\nsur la Colocation existante
+  App -> Utilisateur: Afficher informations\nsur la Colocation existante
+else Colocation inexistante
+  Api_x_BaseDeDonnees --> App: Colocation inexistante
+  App -> Utilisateur: Informer que la Colocation\nn'existe pas
+end
+
+deactivate Api_x_BaseDeDonnees
+deactivate App
+
+@enduml

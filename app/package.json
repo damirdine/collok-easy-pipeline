@@ -5,7 +5,8 @@
   "description": "api-express",
   "main": "app.js",
   "scripts": {
-    "start:watch": "nodemon -L app.js"
+    "start:watch": "nodemon -L app.js",
+    "dev": "nodemon -L app.js"
   },
   "author": "CollokEasy",
   "license": "MIT",

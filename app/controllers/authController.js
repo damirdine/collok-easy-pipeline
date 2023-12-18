@@ -2,12 +2,9 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 import models from "../models/index.js";
+import { JWT_EXPIRED_IN, JWT_SECRET_KEY } from "../helpers/constant.js";
 
 const SALT_ROUNDS = 10;
-const { JWT_SECRET_KEY, JWT_EXPIRED_IN } = process.env;
-
-const DEFAULT_SECRET_KEY = "secret";
-const DEFAULT_EXPIRED = "3d";
 
 const authController = {
   async register(req, res) {
@@ -30,13 +27,9 @@ const authController = {
       const userCreated = await models.user.create(user);
 
       const { password, ...userJWT } = userCreated.toJSON();
-      const token = jwt.sign(
-        { ...userJWT },
-        JWT_SECRET_KEY || DEFAULT_SECRET_KEY,
-        {
-          expiresIn: JWT_EXPIRED_IN || DEFAULT_EXPIRED,
-        }
-      );
+      const token = jwt.sign({ ...userJWT }, JWT_SECRET_KEY, {
+        expiresIn: JWT_EXPIRED_IN,
+      });
 
       return res
         .status(201)
@@ -77,8 +70,8 @@ const authController = {
       const { password, ...userJWT } = user;
 
       // Create a JWT token
-      const token = jwt.sign(userJWT, JWT_SECRET_KEY || DEFAULT_SECRET_KEY, {
-        expiresIn: JWT_EXPIRED_IN || DEFAULT_EXPIRED,
+      const token = jwt.sign(userJWT, JWT_SECRET_KEY, {
+        expiresIn: JWT_EXPIRED_IN,
       });
 
       return res.json({ token });

@@ -3,7 +3,7 @@ import { JWT_SECRET_KEY } from "../helpers/constant.js";
 
 const authMiddleware = (req, res, next) => {
   const tokenHeader = req.header("Authorization");
-  const token = tokenHeader.split("Bearer ")[1];
+  const token = tokenHeader?.split("Bearer ")[1];
 
   if (!token) {
     return res

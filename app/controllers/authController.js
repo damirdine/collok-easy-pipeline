@@ -82,6 +82,17 @@ const authController = {
         .json({ error: { message: "Internal Server Error" } });
     }
   },
+  async me(req, res) {
+    const { id } = req?.user;
+    try {
+      const { password, ...data } = await models.user.findByPk(id);
+      return res.json({ data });
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ error: { message: "Internal Server Error" } });
+    }
+  },
 };
 
 export default authController;

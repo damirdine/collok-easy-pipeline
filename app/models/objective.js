@@ -8,13 +8,13 @@ export default (sequelize, Sequelize) => {
         primaryKey: true,
         autoIncrement: true,
       },
-      created_at: {
+      createdAt: {
         field: "created_at",
         type: DataTypes.DATE,
         defaultValue: Sequelize.fn("NOW"),
         allowNull: false,
       },
-      updated_at: {
+      updatedAt: {
         field: "updated_at",
         type: DataTypes.DATE,
         defaultValue: Sequelize.fn("NOW"),
@@ -57,6 +57,16 @@ export default (sequelize, Sequelize) => {
       through: "user_objective",
       as: "assigned_users",
       foreignKey: "objective_id",
+    });
+    objective.hasOne(models.task, {
+      foreignKey: "objective_id",
+      constraints: false,
+      as: "task",
+    });
+    objective.hasOne(models.outgoing, {
+      foreignKey: "objective_id",
+      constraints: false,
+      as: "outgoing",
     });
   };
 

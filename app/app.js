@@ -3,6 +3,7 @@ import express from "express";
 import bodyParser from "body-parser";
 
 import models from "./models/index.js";
+import apiV1Router from "./routes/router.js";
 import authRouter from "./routes/auth.js";
 import authMiddleware from "./middleware/auth.js";
 import taskRouter from "./routes/task.js";
@@ -27,12 +28,16 @@ router.get("/hello", async (req, res) => {
         "admin_user",
       ],
     });
+
     res.send({ data: data });
   } catch (error) {
+    console.log(error);
     res.send({ error });
   }
 });
 app.use("/", router);
+
+app.use("/api/v1", apiV1Router);
 
 app.use("/auth", authRouter);
 

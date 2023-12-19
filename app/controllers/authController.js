@@ -83,14 +83,22 @@ const authController = {
     }
   },
   async me(req, res) {
-    const { id } = req?.user;
     try {
-      const { password, ...data } = await models.user.findByPk(id);
+      const foundUser = await models.user.findByPk(req?.user?.id);
+      if (!foundUser) {
+        throw new Error("User not found.");
+      }
+      const { password, ...data } = foundUser.toJSON();
       return res.json({ data });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ error: { message: "Internal Server Error" } });
+      console.log(error);
+      return res.status(500).json({
+        error: {
+          message: error.message.includes("User not")
+            ? error.message
+            : "Internal Server Error",
+        },
+      });
     }
   },
 };

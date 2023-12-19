@@ -4,6 +4,10 @@ import bodyParser from "body-parser";
 
 import models from "./models/index.js";
 import apiV1Router from "./routes/router.js";
+import authRouter from "./routes/auth.js";
+import authMiddleware from "./middleware/auth.js";
+import taskRouter from "./routes/task.js";
+import outgoingRouter from "./routes/outgoing.js";
 
 const app = express();
 
@@ -24,7 +28,8 @@ router.get("/hello", async (req, res) => {
         "admin_user",
       ],
     });
-    res.json({ data: data[0] });
+
+    res.send({ data: data });
   } catch (error) {
     console.log(error);
     res.send({ error });
@@ -33,6 +38,13 @@ router.get("/hello", async (req, res) => {
 app.use("/", router);
 
 app.use("/api/v1", apiV1Router);
+
+app.use("/auth", authRouter);
+
+app.use("/api/colocation", taskRouter);
+app.use("/api/colocation", outgoingRouter);
+
+// app.use("/api", apiRouter)
 
 // Démarrage du serveur sur le port 3000
 app.listen(3000, () => {

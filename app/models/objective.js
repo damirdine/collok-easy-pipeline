@@ -7,26 +7,43 @@ export default (sequelize, Sequelize) => {
         type: DataTypes.INTEGER.UNSIGNED,
         primaryKey: true,
         autoIncrement: true,
-        allowNull: false,
       },
-      createdAt: {
+      created_at: {
         field: "created_at",
-        type: Sequelize.DataTypes.DATE,
+        type: DataTypes.DATE,
         defaultValue: Sequelize.fn("NOW"),
         allowNull: false,
       },
-      updatedAt: {
+      updated_at: {
         field: "updated_at",
-        type: Sequelize.DataTypes.DATE,
+        type: DataTypes.DATE,
         defaultValue: Sequelize.fn("NOW"),
         allowNull: false,
       },
-      users_assigned: { type: DataTypes.STRING, allowNull: false },
-      name: { type: DataTypes.STRING, allowNull: false },
-      description: { type: DataTypes.STRING, allowNull: true },
-      deadline: { type: DataTypes.DATE, allowNull: true },
-      colocation_id: { type: DataTypes.INTEGER.UNSIGNED },
-      created_by: { type: DataTypes.INTEGER.UNSIGNED },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      description: {
+        type: DataTypes.STRING,
+      },
+      deadline: {
+        type: DataTypes.DATE,
+      },
+      colocation_id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        references: {
+          model: "colocation",
+          key: "id",
+        },
+      },
+      created_by: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        references: {
+          model: "user",
+          key: "id",
+        },
+      },
     },
     {
       tableName: "objective",
@@ -36,17 +53,12 @@ export default (sequelize, Sequelize) => {
   objective.associate = (models) => {
     objective.belongsTo(models.colocation, { foreignKey: "colocation_id" });
     objective.belongsTo(models.user, { foreignKey: "created_by" });
-
-    objective.hasOne(models.task, {
+    objective.belongsToMany(models.user, {
+      through: "user_objective",
+      as: "assigned_users",
       foreignKey: "objective_id",
-      constraints: false,
-      as: "task",
-    });
-    objective.hasOne(models.outgoing, {
-      foreignKey: "objective_id",
-      constraints: false,
-      as: "outgoing",
     });
   };
+
   return objective;
 };

@@ -62,11 +62,17 @@ export default (sequelize, Sequelize) => {
       foreignKey: "objective_id",
       constraints: false,
       as: "task",
+      scope: {
+        outgoing: null,
+      },
     });
     objective.hasOne(models.outgoing, {
       foreignKey: "objective_id",
       constraints: false,
       as: "outgoing",
+      scope: {
+        task: null,
+      },
     });
   };
 

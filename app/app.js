@@ -5,6 +5,8 @@ import bodyParser from "body-parser";
 import models from "./models/index.js";
 import authRouter from "./routes/auth.js";
 import authMiddleware from "./middleware/auth.js";
+import taskRouter from "./routes/task.js";
+import outgoingRouter from "./routes/outgoing.js";
 
 const app = express();
 
@@ -12,7 +14,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 const router = express.Router();
 
-router.get("/hello", authMiddleware, async (req, res) => {
+router.get("/hello", async (req, res) => {
   try {
     const data = await models.colocation.findAll({
       include: [
@@ -25,7 +27,7 @@ router.get("/hello", authMiddleware, async (req, res) => {
         "admin_user",
       ],
     });
-    res.send({ data: data[0] });
+    res.send({ data: data });
   } catch (error) {
     res.send({ error });
   }
@@ -33,6 +35,9 @@ router.get("/hello", authMiddleware, async (req, res) => {
 app.use("/", router);
 
 app.use("/auth", authRouter);
+
+app.use("/api/colocation", taskRouter);
+app.use("/api/colocation", outgoingRouter);
 
 // app.use("/api", apiRouter)
 

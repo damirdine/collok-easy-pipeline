@@ -1,8 +1,11 @@
 import express from "express";
-import getOutgoingsByColocation from "../controllers/outgoingsController.js";
+import outgoingController from "../controllers/outgoingsController.js";
 
-const router = express.Router();
+const outgoingRouter = express.Router();
 
-router.get("/:colocationId/outgoings", getOutgoingsByColocation);
+outgoingRouter.get(
+  "/:colocationId/outgoings",
+  outgoingController.getOutgoingsByColocation
+);
 
-export default router;
+export default outgoingRouter;

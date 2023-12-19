@@ -35,7 +35,7 @@ export default (sequelize, Sequelize) => {
     }
   );
   task.associate = (models) => {
-    task.hasOne(models.objective, {
+    task.belongsTo(models.objective, {
       foreignKey: "id",
       constraints: false,
     });

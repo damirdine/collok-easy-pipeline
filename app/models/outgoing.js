@@ -38,7 +38,7 @@ export default (sequelize, Sequelize) => {
 
   // Todo l'association
   outgoing.associate = (models) => {
-    outgoing.hasOne(models.objective, {
+    outgoing.belongsTo(models.objective, {
       foreignKey: "id",
       constraints: false,
     });

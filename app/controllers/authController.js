@@ -55,8 +55,8 @@ const authController = {
 
       // Compare the provided password with the hashed password in the database
       const passwordMatch = await argon2.verify(
-        req.body?.password,
-        user.password
+        user.password,
+        req.body?.password
       );
 
       if (!passwordMatch) {

@@ -11,9 +11,12 @@ services:
     env_file:
       - .env
     volumes:
-      - type: bind
-        source: .
-        target: /usr/src/app
+      - .:/usr/src/app # Use a dot instead of type: bind for better readability
+      - /usr/src/app/node_modules
+    depends_on:
+      - db
+    # command: npm run dev && npm run db:up
+
   db:
     image: mysql
     restart: always

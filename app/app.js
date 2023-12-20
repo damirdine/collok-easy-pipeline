@@ -1,5 +1,6 @@
 // Importations nécessaires
 import express from "express";
+import morgan from "morgan";
 import bodyParser from "body-parser";
 
 import models from "./models/index.js";
@@ -9,6 +10,8 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+// http request logger
+app.use(morgan("tiny"));
 const router = express.Router();
 
 router.get("/hello", async (req, res) => {

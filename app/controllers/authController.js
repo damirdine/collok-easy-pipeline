@@ -1,10 +1,8 @@
-import bcrypt from "bcrypt";
+import * as argon2 from "argon2";
 import jwt from "jsonwebtoken";
 
 import models from "../models/index.js";
 import { JWT_EXPIRED_IN, JWT_SECRET_KEY } from "../helpers/constant.js";
-
-const SALT_ROUNDS = 10;
 
 const authController = {
   async register(req, res) {
@@ -20,7 +18,7 @@ const authController = {
           .json({ error: { message: "User email already exists" } });
       }
       // Hash the password
-      const hashedPassword = await bcrypt.hash(body?.password, SALT_ROUNDS);
+      const hashedPassword = await argon2.hash(body?.password);
 
       // Save user to the database
       const user = Object.assign({ ...body }, { password: hashedPassword });
@@ -56,9 +54,9 @@ const authController = {
       }
 
       // Compare the provided password with the hashed password in the database
-      const passwordMatch = await bcrypt.compare(
-        req.body?.password,
-        user.password
+      const passwordMatch = await argon2.verify(
+        user.password,
+        req.body?.password
       );
 
       if (!passwordMatch) {
@@ -80,25 +78,6 @@ const authController = {
       return res
         .status(500)
         .json({ error: { message: "Internal Server Error" } });
-    }
-  },
-  async me(req, res) {
-    try {
-      const foundUser = await models.user.findByPk(req?.user?.id || 1);
-      if (!foundUser) {
-        throw new Error("User not found.");
-      }
-      const { password, ...data } = foundUser.toJSON();
-      return res.json({ data });
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json({
-        error: {
-          message: error.message.includes("User not")
-            ? error.message
-            : "Internal Server Error",
-        },
-      });
     }
   },
 };

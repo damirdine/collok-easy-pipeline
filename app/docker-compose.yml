@@ -2,12 +2,14 @@ version: "3"
 
 services:
   api-express:
+    container_name: api
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
-
+    env_file:
+      - .env
     volumes:
       - type: bind
         source: .
@@ -15,6 +17,7 @@ services:
   db:
     image: mysql
     restart: always
+    container_name: db
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: collokeasy

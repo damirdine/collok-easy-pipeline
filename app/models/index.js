@@ -17,6 +17,8 @@ const db = {};
 
 if (env === "development") config.host = "db";
 
+config.logging = process.env.SEQUELIZE_LOG === "false" ? false : console.log;
+
 console.log(config);
 let sequelize;
 

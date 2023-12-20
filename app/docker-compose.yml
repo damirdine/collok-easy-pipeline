@@ -14,7 +14,7 @@ services:
       - /usr/src/app/node_modules
     depends_on:
       - db
-    # command: npm run dev && npm run db:up
+    command: npm run dev && npm run db:up
   db:
     image: mysql
     restart: always

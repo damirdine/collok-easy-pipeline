@@ -5,8 +5,5 @@ const taskRouter = express.Router();
 
 taskRouter.get("/:colocationId/tasks", tasksController.getTasksByColocation);
 taskRouter.get("/:colocationId/tasks/:taskId", tasksController.getTask);
-taskRouter.put(
-  "/:colocationId/tasks/:taskId/status",
-  tasksController.updateTaskStatus
-);
+taskRouter.put("/:colocationId/tasks/:taskId", tasksController.updateTask);
 export default taskRouter;

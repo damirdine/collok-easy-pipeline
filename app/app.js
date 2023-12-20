@@ -4,6 +4,9 @@ import morgan from "morgan";
 import bodyParser from "body-parser";
 import cors from "cors";
 
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./swagger.js";
+
 import apiV1Router from "./routes/router.js";
 
 const app = express();
@@ -13,6 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // http request logger
 app.use(morgan("tiny"));
 
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/v1", apiV1Router);
 
 // app.use("/api", apiRouter)

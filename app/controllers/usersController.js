@@ -7,42 +7,59 @@ const userController = {
       res.json({ data: users });
     } catch (error) {
       console.error(error);
-      res.status(500).send({ error: { messsage: "Erreur serveur" } });
+      res.status(500).send({ error: "Erreur serveur" });
     }
   },
   async editProfile(req, res) {
     try {
-      throw new Error("hello");
+      const userId = req?.user?.id; // Assuming you have user ID in the request
+
+      // Fetch the user from the database
+      const user = await models.user.findByPk(userId);
+
+      if (!user) {
+        throw new Error("User not found.");
+      }
+
+      const { password, ...body } = req.body;
+      await user.update({ ...body, updateAt: new Date() });
+      const { password: psw, ...userData } = user.toJSON();
+      res.json({ message: "Profile updated successfully", data: userData });
     } catch (error) {
       console.error(error);
-      res.status(500).send({ error: { messsage: "Erreur serveur" } });
+      res.status(500).send({ error: "Erreur serveur" });
     }
   },
+
   async deleteProfile(req, res) {
-    // if not admin can delete
     try {
-      throw new Error("hello");
+      const userIdToDelete = req.user.id;
+      const userToDelete = await models.user.findByPk(userIdToDelete);
+
+      if (!userToDelete) {
+        throw new Error("User not found.");
+      }
+      await userToDelete.destroy();
+
+      res.json({ message: "Profile deleted successfully" });
     } catch (error) {
       console.error(error);
-      res.status(500).send({ error: { messsage: "Erreur serveur" } });
+      res.status(500).send({ error: "Erreur serveur" });
     }
   },
   async me(req, res) {
     try {
-      const foundUser = await models.user.findByPk(req?.user?.id || 1);
+      const foundUser = await models.user.findByPk(req?.user?.id);
       if (!foundUser) {
         throw new Error("User not found.");
       }
       const { password, ...data } = foundUser.toJSON();
       return res.json({ data });
     } catch (error) {
+      const notFound = error.message.includes("not found");
       console.log(error);
-      return res.status(500).json({
-        error: {
-          message: error.message.includes("User not")
-            ? error.message
-            : "Internal Server Error",
-        },
+      return res.status(notFound ? 404 : 500).json({
+        error: notFound ? error.message : "Internal Server Error",
       });
     }
   },

@@ -13,9 +13,7 @@ const authController = {
         where: { email: body?.email },
       });
       if (foundUser) {
-        return res
-          .status(400)
-          .json({ error: { message: "User email already exists" } });
+        return res.status(400).json({ error: "User email already exists" });
       }
       // Hash the password
       const hashedPassword = await argon2.hash(body?.password);
@@ -34,9 +32,7 @@ const authController = {
         .json({ message: "Registration successful", token });
     } catch (error) {
       console.error(error);
-      return res
-        .status(500)
-        .json({ error: { message: "Internal Server Error" } });
+      return res.status(500).json({ error: "Internal Server Error" });
     }
   },
   async login(req, res) {
@@ -48,9 +44,7 @@ const authController = {
 
       // Check if the user exists
       if (!user) {
-        return res
-          .status(401)
-          .json({ error: { message: "Invalid credentials" } });
+        return res.status(401).json({ error: "Invalid credentials" });
       }
 
       // Compare the provided password with the hashed password in the database
@@ -60,9 +54,7 @@ const authController = {
       );
 
       if (!passwordMatch) {
-        return res
-          .status(401)
-          .json({ error: { message: "Invalid credentials" } });
+        return res.status(401).json({ error: "Invalid credentials" });
       }
 
       const { password, ...userJWT } = user;
@@ -75,9 +67,7 @@ const authController = {
       return res.json({ token });
     } catch (error) {
       console.error(error);
-      return res
-        .status(500)
-        .json({ error: { message: "Internal Server Error" } });
+      return res.status(500).json({ error: "Internal Server Error" });
     }
   },
 };

@@ -49,7 +49,7 @@ const userController = {
   },
   async me(req, res) {
     try {
-      const foundUser = await models.user.findByPk(req?.user?.id);
+      const foundUser = await models.user.findByPk(req?.user?.id || 1);
       if (!foundUser) {
         throw new Error("User not found.");
       }

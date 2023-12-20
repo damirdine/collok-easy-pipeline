@@ -6,7 +6,6 @@ export const getColocations = async (req, res) => {
     const data = await models.colocation.findAll();
     res.json({ data });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -21,7 +20,6 @@ export const getColocationById = async (req, res) => {
       res.status(404).json({ error: "Colocation not found" });
     }
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -65,7 +63,6 @@ export const updateColocationAdmin = async (req, res) => {
 
   try {
     const colocation = await models.colocation.findByPk(colocationId);
-    console.log(colocation)
     if (colocation) {
       await colocation.update({ admin_user_id });
       res.json({ colocation });
@@ -100,7 +97,6 @@ export const addColocationMember = async (req, res) => {
       res.status(404).json({ error: "User not found" });
     }
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -124,7 +120,6 @@ export const deleteColocationMember = async (req, res) => {
       res.status(404).json({ error: "User not found" });
     }
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };

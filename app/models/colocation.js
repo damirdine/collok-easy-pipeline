@@ -1,4 +1,4 @@
-// models/colocation.js
+
 export default (sequelize, Sequelize) => {
   const { DataTypes } = Sequelize;
   const colocation = sequelize.define(

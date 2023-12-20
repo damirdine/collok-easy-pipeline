@@ -1,8 +1,12 @@
 import express from "express";
-import getTasksByColocation from "../controllers/tasksController.js";
+import tasksController from "../controllers/tasksController.js";
 
-const router = express.Router();
+const taskRouter = express.Router();
 
-router.get("/:colocationId/tasks", getTasksByColocation);
-
-export default router;
+taskRouter.get("/:colocationId/tasks", tasksController.getTasksByColocation);
+taskRouter.get("/:colocationId/tasks/:taskId", tasksController.getTask);
+taskRouter.put(
+  "/:colocationId/tasks/:taskId/status",
+  tasksController.updateTaskStatus
+);
+export default taskRouter;

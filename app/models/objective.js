@@ -44,6 +44,11 @@ export default (sequelize, Sequelize) => {
           key: "id",
         },
       },
+      is_completed: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false, 
+        allowNull: false
+      },
     },
     {
       tableName: "objective",

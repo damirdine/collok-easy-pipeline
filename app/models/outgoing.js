@@ -39,7 +39,7 @@ export default (sequelize, Sequelize) => {
   // Todo l'association
   outgoing.associate = (models) => {
     outgoing.belongsTo(models.objective, {
-      foreignKey: "id",
+      foreignKey: "objective_id",
       constraints: false,
     });
   };

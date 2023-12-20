@@ -1,5 +1,5 @@
 import db from "../models/index.js";
-const { sequelize, task, objective } = db; // Extrayez les modèles ici
+const { sequelize, task, objective } = db;
 
 const tasksController = {
   async getTasksByColocation(req, res) {
@@ -28,15 +28,23 @@ const tasksController = {
     try {
       const { taskId, colocationId } = req.params;
 
-      const taskInstance = await task.findOne({
-        // Utilisez task ici au lieu de models.task
+      const taskInstance = await db.task.findOne({
         where: { id: taskId },
         include: [
           {
-            model: objective,
-            as: "objective", // Assurez-vous que cet alias correspond à l'alias défini dans l'association
-            where: { colocation_id: colocationId },
+            model: db.objective,
+            as: "objective",
+            attributes: ["name", "deadline", "created_by", "is_completed"],
             required: true,
+            include: [
+              {
+                model: db.user,
+                as: "assigned_users",
+                through: { attributes: [] },
+                attributes: ["id", "firstname", "lastname", "avatar"],
+              },
+            ],
+            where: { colocation_id: colocationId },
           },
         ],
       });
@@ -49,53 +57,55 @@ const tasksController = {
 
       res.json(taskInstance);
     } catch (error) {
+      console.log(error);
       res
         .status(500)
         .send({ error: "Erreur lors de la récupération de la tâche." });
     }
   },
 
-  async updateTaskStatus(req, res) {
-    const { taskId, colocationId } = req.params;
-    const { isCompleted } = req.body;
-
-    const t = await sequelize.transaction();
-
+  async updateTask(req, res) {
     try {
-      const taskInstance = await task.findOne({
-        // Utilisez task ici au lieu de models.task
-        where: { id: taskId },
-        include: [
-          {
-            model: objective, // Utilisez objective ici
-            where: { colocation_id: colocationId },
-            required: true,
-          },
-        ],
-        transaction: t,
-      });
+      const { taskId, colocationId } = req.params;
+      const updateData = req.body; // Les données à mettre à jour
 
-      if (!taskInstance) {
-        await t.rollback();
-        throw new Error(
-          "Task not found or does not belong to the specified colocation."
-        );
+      const task = await db.task.findByPk(taskId, {
+        include: [{ model: db.objective, as: "objective" }],
+      });
+      if (!task) {
+        return res.status(404).send({ error: "Tâche non trouvée." });
+      }
+      // Mise à jour de l'objective si nécessaire
+      if (
+        updateData.is_completed !== undefined ||
+        updateData.name !== undefined ||
+        updateData.deadline !== undefined
+      ) {
+        const objectiveUpdate = {};
+        if (updateData.is_completed !== undefined)
+          objectiveUpdate.is_completed = updateData.is_completed;
+        if (updateData.name !== undefined)
+          objectiveUpdate.name = updateData.name;
+        if (updateData.deadline !== undefined)
+          objectiveUpdate.deadline = updateData.deadline;
+
+        await task.objective.update(objectiveUpdate);
       }
 
-      taskInstance.is_completed = isCompleted;
-      await taskInstance.save({ transaction: t });
+      // Vérifiez si la mise à jour concerne la task
+      if (updateData.estimated_duration !== undefined) {
+        // Mettez à jour la task
+        await task.update({
+          estimated_duration: updateData.estimated_duration,
+        });
+      }
 
-      await t.commit();
-      res
-        .status(200)
-        .send({ message: "Statut de la tâche mis à jour avec succès." });
+      res.send({ message: "Tâche mise à jour avec succès." });
     } catch (error) {
-      await t.rollback();
-      res.status(500).send({
-        error:
-          error.message ||
-          "Erreur lors de la mise à jour du statut de la tâche.",
-      });
+      console.error(error);
+      res
+        .status(500)
+        .send({ error: "Erreur lors de la mise à jour de la tâche." });
     }
   },
 };

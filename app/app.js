@@ -2,12 +2,13 @@
 import express from "express";
 import morgan from "morgan";
 import bodyParser from "body-parser";
+import cors from "cors";
 
 import models from "./models/index.js";
 import apiV1Router from "./routes/router.js";
 
 const app = express();
-
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // http request logger
@@ -22,7 +23,7 @@ router.get("/hello", async (req, res) => {
         {
           model: models.objective,
           as: "objectives",
-          include: ["task", "outgoing"],
+          // include: ["task", "outgoing"],
         },
         "admin_user",
       ],

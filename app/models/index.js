@@ -15,7 +15,7 @@ const env = process.env.NODE_ENV || "development";
 const config = jsonConfig[env];
 const db = {};
 
-if (env === "development") config.host = "db";
+if (env === "development" || env === "test") config.host = "db";
 
 config.logging = process.env.SEQUELIZE_LOG === "false" ? false : console.log;
 

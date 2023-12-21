@@ -5,7 +5,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import Sequelize from "sequelize";
 import process from "process";
-import jsonConfig from "../config/config.json" assert { type: "json" };
+import jsonConfig from "../config/config.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,7 +19,6 @@ if (env === "development") config.host = "db";
 
 config.logging = process.env.SEQUELIZE_LOG === "false" ? false : console.log;
 
-console.log(config);
 let sequelize;
 
 if (config.use_env_variable) {

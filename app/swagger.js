@@ -6,7 +6,7 @@ const options = {
     info: {
       title: "Collok-Easy API",
       version: "1.0.0",
-      description: "API documentation for Collok-Esay",
+      description: "API documentation for Collok-Easy",
     },
   },
   apis: ["./routes/*.js"], // Specify the path to your route files

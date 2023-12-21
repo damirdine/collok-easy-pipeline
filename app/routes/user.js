@@ -18,6 +18,8 @@ userRouter.put("/", userController.editProfile);
 
 userRouter.delete("/", userController.deleteProfile);
 
+userRouter.post("/exists", userController.isExist);
+
 export default userRouter;
 
 /**
@@ -55,7 +57,7 @@ export default userRouter;
 
 /**
  * @swagger
- * /api/v1/profile:
+ * /api/v1/users:
  *   get:
  *     summary: Get user profile information
  *     description: Retrieve information about the authenticated user.

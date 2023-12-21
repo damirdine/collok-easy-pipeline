@@ -44,6 +44,25 @@ export const createColocation = async (req, res) => {
   }
 };
 
+export const updateColocationName = async (req, res) => {
+  const { colocationID } = req.params;
+  const { name } = req.body;
+
+  try {
+    const data = await models.colocation.findByPk(colocationID);
+
+    if (data) {
+      await data.update({ name: name });
+      await data.reload();
+      res.json({ data });
+    } else {
+      res.status(404).json({ error: "Colocation not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 
 export const getColocationAdmin = async (req, res) => {
   const { colocationID } = req.params;

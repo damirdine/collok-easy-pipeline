@@ -6,16 +6,23 @@ const colocationRouter = express.Router();
 
 colocationRouter.get(
   "/", 
-  colocationController.getColocations);
+  colocationController.getColocations
+  );
 
 colocationRouter.get(
   "/:colocationID",
-  colocationController.getColocationById);
+  colocationController.getColocationById
+  );
 
 colocationRouter.post(
   "/",
-   colocationController.createColocation);
-// Faire une update one pour changer les infos ?
+  colocationController.createColocation
+  );
+
+colocationRouter.put(
+    "/:colocationID",
+    colocationController.updateColocationName
+  );
 
 colocationRouter.get(
   "/:colocationID/admin/",
@@ -163,6 +170,53 @@ export default colocationRouter;
  *           application/json:
  *             example:
  *               error: Bad Request - Name and admin_user_id are required.
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Internal Server Error
+ */
+
+  /**
+ * @swagger
+ * /api/v1/colocation/{colocationID}:
+ *   put:
+ *     summary: Update colocation name
+ *     description: Update the name of a specific colocation.
+ *     tags: [Colocation]
+ *     parameters:
+ *       - in: path
+ *         name: colocationID
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the colocation
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           example:
+ *             name: "New Colocation Name"
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               data: {
+ *                 "id": 5,
+ *                 "createdAt": "2023-12-21T09:38:19.000Z",
+ *                 "updatedAt": "2023-12-21T09:38:19.000Z",
+ *                 "name": "New Colocation Name",
+ *                 "admin_user_id": 8
+ *               }
+ *       404:
+ *         description: Colocation not found
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Colocation not found
  *       500:
  *         description: Internal Server Error
  *         content:

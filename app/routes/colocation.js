@@ -1,5 +1,5 @@
 import express from "express";
-import * as colocationController from "../controllers/colocationController.js";
+import colocationController from "../controllers/colocationController.js";
 
 const colocationRouter = express.Router();
 

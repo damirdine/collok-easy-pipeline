@@ -69,8 +69,15 @@ const tasksController = {
       const { taskId, colocationId } = req.params;
       const updateData = req.body; // Les données à mettre à jour
 
-      const task = await db.task.findByPk(taskId, {
-        include: [{ model: db.objective, as: "objective" }],
+      const task = await db.task.findOne({
+        where: { id: taskId },
+        include: [
+          {
+            model: db.objective,
+            as: "objective",
+            where: { colocation_id: colocationId },
+          },
+        ],
       });
       if (!task) {
         return res.status(404).send({ error: "Tâche non trouvée." });
@@ -99,13 +106,53 @@ const tasksController = {
           estimated_duration: updateData.estimated_duration,
         });
       }
-
-      res.send({ message: "Tâche mise à jour avec succès." });
+      if (!task) {
+        return res
+          .status(404)
+          .send({ error: "Tâche non trouvée dans cette colocation." });
+      }
+      res.send({ message: "Tâche mise à jour avec succès.", data: task });
     } catch (error) {
       console.error(error);
       res
         .status(500)
         .send({ error: "Erreur lors de la mise à jour de la tâche." });
+    }
+  },
+
+  async assignUserToTask(req, res) {
+    try {
+      const { taskId } = req.params;
+      const { userId } = req.body;
+
+      const task = await db.task.findByPk(taskId);
+      if (!task) {
+        return res.status(404).send({ error: "Tâche non trouvée." });
+      }
+
+      const objective = await db.objective.findByPk(task.objective_id);
+      if (!objective) {
+        return res.status(404).send({ error: "Objectif non trouvé." });
+      }
+
+      await objective.reload();
+      if (!objective) {
+        return res.status(404).send({ error: "Objectif non trouvé." });
+      }
+
+      const user = await db.user.findByPk(userId);
+      if (!user) {
+        return res.status(404).send({ error: "Utilisateur non trouvé." });
+      }
+
+      await objective.addAssigned_users(user);
+
+      res.send({ message: "Utilisateur assigné à la tache avec succès." });
+    } catch (error) {
+      console.error(error);
+      res
+        .status(500)
+        .send({ error: "Erreur lors de l'assignation de l'utilisateur." });
     }
   },
 };

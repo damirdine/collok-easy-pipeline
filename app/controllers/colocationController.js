@@ -45,13 +45,11 @@ export const createColocation = async (req, res) => {
 };
 
 
-export const getColocationByAdmin = async (req, res) => {
-  const { adminUserId } = req.params;
+export const getColocationAdmin = async (req, res) => {
+  const { colocationID } = req.params;
 
   try {
-    const data = await models.colocation.findOne({
-      where: { admin_user_id: adminUserId }
-    });
+    const data = await models.colocation.findByPk(colocationID);
 
     if (data) {
       res.json({ data });

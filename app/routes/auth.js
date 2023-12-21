@@ -42,9 +42,8 @@ export default authRouter;
  *         content:
  *           application/json:
  *             example:
- *               data:
- *                 message: Registration successful
- *                 token: <generated_access_token>
+ *                message: Registration successful
+ *                token: <generated_access_token>
  *       400:
  *         description: Registration failed
  *         content:
@@ -73,9 +72,8 @@ export default authRouter;
  *         content:
  *           application/json:
  *             example:
- *               data:
- *                 message: Registration successful
- *                 token: <generated_access_token>
+ *                message: Registration successful
+ *                token: <generated_access_token>
  *       400:
  *         description: Registration failed
  *         content:

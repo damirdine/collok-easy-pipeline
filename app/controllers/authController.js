@@ -57,7 +57,7 @@ const authController = {
         return res.status(401).json({ error: "Invalid credentials" });
       }
 
-      const { password, ...userJWT } = user;
+      const { password, ...userJWT } = user.toJSON();
 
       // Create a JWT token
       const token = jwt.sign(userJWT, JWT_SECRET_KEY, {

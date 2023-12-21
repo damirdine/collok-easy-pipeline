@@ -1,46 +1,53 @@
 import express from "express";
 import colocationController from "../controllers/colocationController.js";
-
+import colocationValidation from "../middleware/validations/colocation.js";
 const colocationRouter = express.Router();
 
 
 colocationRouter.get(
-  "/", 
+  "/",
   colocationController.getColocations
   );
 
 colocationRouter.get(
   "/:colocationID",
+  colocationValidation.validateGetColocationById,
   colocationController.getColocationById
   );
 
 colocationRouter.post(
   "/",
+  colocationValidation.validateCreateColocation,
   colocationController.createColocation
   );
 
 colocationRouter.put(
     "/:colocationID",
+    colocationValidation.validateUpdateColocationName,
     colocationController.updateColocationName
   );
 
 colocationRouter.get(
   "/:colocationID/admin/",
+  colocationValidation.validateGetColocationAdmin,
   colocationController.getColocationAdmin
 );
 
 colocationRouter.put(
   "/:colocationID/admin",
+  colocationValidation.validateUpdateColocationAdmin,
   colocationController.updateColocationAdmin
 );
 
 colocationRouter.put(
   "/:colocationID/members",
+  colocationValidation.validateAddColocationMember,
   colocationController.addColocationMember
 );
 
 colocationRouter.delete(
   "/:colocationID/members/",
+  colocationValidation.validateDeleteColocationMember,
   colocationController.deleteColocationMember
 );
 export default colocationRouter;
@@ -185,6 +192,8 @@ export default colocationRouter;
  *     summary: Update colocation name
  *     description: Update the name of a specific colocation.
  *     tags: [Colocation]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: colocationID
@@ -229,7 +238,7 @@ export default colocationRouter;
  * @swagger
  * /api/v1/colocation/{colocationID}/admin/:
  *   get:
- *     summary: Get colocation admin ID
+ *     summary: Get colocation admin
  *     description: Retrieve information about the colocation associated with a specific admin user.
  *     tags: [Colocation]
  *     security:
@@ -247,13 +256,20 @@ export default colocationRouter;
  *         content:
  *           application/json:
  *             example:
- *               data: {
- *                 "id": 8,
- *                 "createdAt": "2023-12-21T10:09:45.000Z",
- *                 "updatedAt": "2023-12-21T10:09:45.000Z",
- *                 "name": "My Colocation bis encore plus",
- *                 "admin_user_id": 8
- *               }
+ *               data:
+ *                 id: 2
+ *                 createdAt: "2023-12-21T09:38:19.000Z"
+ *                 updatedAt: "2023-12-21T12:43:11.000Z"
+ *                 firstname: "User2"
+ *                 lastname: "Lastname2"
+ *                 email: "user2@example.com"
+ *                 password: "password"
+ *                 birthday: null
+ *                 phone: null
+ *                 pseudo: null
+ *                 gender: null
+ *                 avatar: null
+ *                 colocation_id: null
  *       404:
  *         description: Colocation not found for admin user
  *         content:
@@ -290,7 +306,7 @@ export default colocationRouter;
  *       content:
  *         application/json:
  *           example:
- *             newAdminID: 2
+ *             user_id: 2
  *     responses:
  *       200:
  *         description: Successful response

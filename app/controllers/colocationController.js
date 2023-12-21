@@ -63,7 +63,7 @@ const colocationController = {
     const { colocationID } = req.params;
 
     try {
-      const data = await models.colocation.findByPk(colocationID);
+      const data = await models.user.findByPk(colocationID);
 
       if (data) {
         res.json({ data });

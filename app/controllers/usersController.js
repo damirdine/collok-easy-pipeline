@@ -63,5 +63,23 @@ const userController = {
       });
     }
   },
+  async isExist(req, res) {
+    try {
+      const user = models.user.findOne({
+        where: {
+          [models.sequelize.Op.or]: [
+            { email: req.body?.email },
+            { pseudo: req.body?.nickname ?? req.body?.pseudo },
+          ],
+        },
+      });
+
+      const { password: psw, ...userData } = user.toJSON();
+      res.json({ data: userData });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ error: "Erreur serveur" });
+    }
+  },
 };
 export default userController;

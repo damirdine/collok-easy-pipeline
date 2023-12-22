@@ -21,7 +21,7 @@ export default (sequelize, Sequelize) => {
         defaultValue: Sequelize.fn("NOW"),
         allowNull: false,
       },
-      final_expense: { type: DataTypes.FLOAT, allowNull: false },
+      final_expense: { type: DataTypes.INTEGER, allowNull: false },
       objective_id: {
         type: DataTypes.INTEGER.UNSIGNED,
         references: {

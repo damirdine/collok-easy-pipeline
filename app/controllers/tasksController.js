@@ -27,7 +27,7 @@ const tasksController = {
           .send({ error: "Accès refusé à cette colocation." });
       }
       // Respond with the fetched tasks
-      res.status(200).json(tasks);
+      res.status(200).json({ data: tasks });
     } catch (error) {
       // Handle any errors during the process
       res
@@ -67,7 +67,7 @@ const tasksController = {
           .send({ error: "Tâche non trouvée dans cette colocation." });
       }
 
-      res.status(200).json(taskInstance);
+      res.status(200).json({ data: taskInstance });
     } catch (error) {
       console.log(error);
       res

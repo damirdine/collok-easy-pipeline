@@ -21,4 +21,5 @@ apiV1Router.use("/colocation", authMiddleware, outgoingRouter);
 apiV1Router.use("/colocation", authMiddleware, taskRouter);
 apiV1Router.use("/colocation", authMiddleware, colocationRouter);
 
+
 export default apiV1Router;

@@ -14,7 +14,8 @@ services:
       - /usr/src/app/node_modules
     depends_on:
       - db
-    command: npm run dev && npm run db:up
+    command: npm run dev
+
   db:
     image: mysql
     restart: always
@@ -26,12 +27,10 @@ services:
       MYSQL_PASSWORD: password
     ports:
       - 3306:3306
-    # volumes:
-    #   - ./mysql-data:/var/lib/mysql
+    volumes:
+      - ../mysqldata:/var/lib/mysql
   adminer:
     image: adminer
     restart: always
     ports:
       - 8080:8080
-# volumes:
-#   mysqldata:

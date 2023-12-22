@@ -23,7 +23,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            cd ~/www/collok-easy-backend/app
+            cd ~/www/collok-easy-backend/app/
             git pull origin main
             git status
             docker compose up -d --build

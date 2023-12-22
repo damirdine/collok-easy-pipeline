@@ -1,8 +1,8 @@
-# Documentation d'installation du projet Sequelize
+# Documentation du Backend du projet Collok-Easy
 
 ### Prérequis
 
-- Node.js : Assurez-vous que Node.js est installé sur votre machine. Vous pouvez le télécharger depuis [nodejs.org](https://nodejs.org/).
+- Node.js : Assurez-vous que Node.js est installé sur votre machine avec une version minimale de Node.js 20. Vous pouvez le télécharger depuis [nodejs.org](https://nodejs.org/).
 - npm : npm est le gestionnaire de paquets pour Node.js et est livré avec l'installation de Node.js.
 - Docker : Si Docker n'est pas installé, téléchargez et installez-le depuis [docker.com](https://www.docker.com/get-started).
 
@@ -10,7 +10,7 @@
 
 ### 1. Cloner le dépôt
 
-Clonez le dépôt du projet Sequelize à partir de la source :
+Clonez le dépôt du projet à partir de la source :
 
 ```bash
 git clone <repository-url>
@@ -39,7 +39,7 @@ Si vous devez reconstruire les images, utilisez l'option `--build` :
 docker-compose up --build
 ```
 
-### 4. Exécuter les migrations de la base de données
+### 4. Exécuter les migrations de la base de données et/ou les semences (optionnel)
 
 Les migrations Sequelize sont utilisées pour gérer les changements de schéma de base de données. Exécutez la commande suivante pour appliquer les migrations et configurer les tables de la base de données :
 
@@ -47,9 +47,17 @@ Les migrations Sequelize sont utilisées pour gérer les changements de schéma 
 npx sequelize-cli db:migrate
 ```
 
-### 5. Exécuter les semences (optionnel)
+Les semences sont des scripts qui peuplent la base de données avec des données initiales. Si votre projet inclut des données de départ, vous pouvez exécuter les deux processus en une seule fois avec la commande suivante :
 
-Les semences sont des scripts qui peuplent la base de données avec des données initiales. Si votre projet inclut des données de départ, exécutez la commande suivante :
+```bash
+npm run db:up
+```
+
+Ou, si vous préférez exécuter les migrations et les semences séparément, utilisez les commandes suivantes :
+
+```bash
+npx sequelize-cli db:migrate
+```
 
 ```bash
 npx sequelize-cli db:seed:all

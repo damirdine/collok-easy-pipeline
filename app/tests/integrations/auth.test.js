@@ -1,26 +1,63 @@
 import request from "supertest";
-import http from "node:http";
-import app from "../../app";
+import server from "./utils";
 
 const API_BASE_URL = "/api/v1";
-const server = http.createServer(app);
+server.listen(3001);
 
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVkQXQiOnsiZm4iOiJOT1ciLCJhcmdzIjpbXX0sInVwZGF0ZWRBdCI6eyJmbiI6Ik5PVyIsImFyZ3MiOltdfSwiaWQiOjExLCJmaXJzdG5hbWUiOiJKb2huIiwibGFzdG5hbWUiOiJEb2UiLCJlbWFpbCI6ImV4YW1wbGVAZXhhbXBsZS5jb20iLCJiaXJ0aGRheSI6IjE5OTAtMDEtMDFUMDA6MDA6MDAuMDAwWiIsInBob25lIjoiMTIzNDU2Nzg5MCIsInBzZXVkbyI6ImpvaG5fZG9lIiwiZ2VuZGVyIjoibWFsZSIsImF2YXRhciI6Imh0dHBzOi8vZXhhbXBsZS5jb20vYXZhdGFyLmpwZyIsImlhdCI6MTcwMzE3MDUwMiwiZXhwIjoxNzAzNDI5NzAyfQ.NmAVkbne3dt2XDrQrxH0TPChFEAzBeXaFc6bPjrKefA";
-describe("API v1 Authentication (Registration/Login)", () => {
+let token;
+describe("Authentication (Registration/Login)", () => {
   test("Registration)", async () => {
-    // const response = await request(server)
-    //   .get(API_BASE_URL + "/me")
-    //   .set("Authorization", `Bearer ${token}`)
-    //   .expect("Content-Type", /json/)
-    //   .expect(200);
-    // console.log(response);
-
-    expect(200).toBe(200);
+    const response = await request(server)
+      .post(API_BASE_URL + "/auth/register")
+      .send({
+        firstname: "John",
+        lastname: "Doe",
+        email: "example@example.com",
+        password: "your_password",
+        birthday: "1990-01-01",
+        phone: "1234567890",
+        pseudo: "john_doe",
+        gender: "male",
+        avatar: "https://example.com/avatar.jpg",
+      })
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
+      .expect(201);
+    token = response.body?.token;
   });
-  test("Login", () => {
-    expect(2).toBe(2);
+  test("Login", async () => {
+    const response = await request(server)
+      .post(API_BASE_URL + "/auth/login")
+      .send({
+        email: "example@example.com",
+        password: "your_password",
+      })
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
+      .expect(200);
+
+    token = response.body?.token;
   });
 });
 
+describe("User profile", () => {
+  test("Edit profile", async () => {
+    const firstname = "Firstname";
+    const res = await request(server)
+      .put(API_BASE_URL + "/users")
+      .send({ firstname })
+      .set("Authorization", `Bearer ${token}`)
+      .expect("Content-Type", /json/)
+      .expect(200);
+
+    expect(res?.body?.data?.firstname).toEqual(firstname);
+  });
+  test("Delete profile", async () => {
+    await request(server)
+      .delete(API_BASE_URL + "/users")
+      .set("Authorization", `Bearer ${token}`)
+      .expect("Content-Type", /json/)
+      .expect(200);
+  });
+});
 server.close();

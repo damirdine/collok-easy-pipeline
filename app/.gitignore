@@ -4,6 +4,7 @@ mysqldata/
 
 # Fichiers de configuration spécifiques à l'environnement de développement
 .env
+.env.test
 
 # Fichiers de logs
 logs/

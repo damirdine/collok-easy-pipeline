@@ -11,8 +11,8 @@ taskRouter.post(
   tasksController.assignUserToTask
 );
 taskRouter.delete(
-    "/:colocationId/tasks/:taskId/assign-user",
-    tasksController.assignUserToTask
-  );
+  "/:colocationId/tasks/:taskId/assign-user",
+  tasksController.removeUserFromTask
+);
 
 export default taskRouter;

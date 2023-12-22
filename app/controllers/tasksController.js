@@ -98,7 +98,6 @@ const tasksController = {
 
         await task.objective.update(objectiveUpdate);
       }
-
       // Vérifiez si la mise à jour concerne la task
       if (updateData.estimated_duration !== undefined) {
         // Mettez à jour la task
@@ -122,37 +121,95 @@ const tasksController = {
 
   async assignUserToTask(req, res) {
     try {
-      const { taskId } = req.params;
+      const { taskId, colocationId } = req.params;
       const { userId } = req.body;
 
-      const task = await db.task.findByPk(taskId);
-      if (!task) {
-        return res.status(404).send({ error: "Tâche non trouvée." });
-      }
+      const task = await db.task.findOne({
+        where: { id: taskId },
+        include: [
+          {
+            model: db.objective,
+            as: "objective",
+            where: { colocation_id: colocationId },
+          },
+        ],
+      });
 
+      if (!task) {
+        return res.status(404).send({
+          error: "Tâche non trouvée ou ne fait pas partie de cette colocation.",
+        });
+      }
       const objective = await db.objective.findByPk(task.objective_id);
       if (!objective) {
         return res.status(404).send({ error: "Objectif non trouvé." });
       }
-
       await objective.reload();
-      if (!objective) {
-        return res.status(404).send({ error: "Objectif non trouvé." });
-      }
-
-      const user = await db.user.findByPk(userId);
+      // Vérifier si l'utilisateur appartient à la colocation
+      const user = await db.user.findOne({
+        where: { id: userId, colocation_id: colocationId },
+      });
       if (!user) {
-        return res.status(404).send({ error: "Utilisateur non trouvé." });
+        return res.status(404).send({
+          error: "Utilisateur non trouvé ou n'appartient pas à la colocation.",
+        });
       }
-
       await objective.addAssigned_users(user);
-
-      res.send({ message: "Utilisateur assigné à la tache avec succès." });
+      res.send({
+        message: "Utilisateur assigné à la tache avec succès.",
+      });
     } catch (error) {
       console.error(error);
       res
         .status(500)
         .send({ error: "Erreur lors de l'assignation de l'utilisateur." });
+    }
+  },
+  async removeUserFromTask(req, res) {
+    try {
+      const { taskId, colocationId } = req.params;
+      const { userId } = req.body;
+      // Vérifier si la tâche existe et appartient à la colocation
+      const task = await db.task.findOne({
+        where: { id: taskId },
+        include: [
+          {
+            model: db.objective,
+            as: "objective",
+            where: { colocation_id: colocationId },
+          },
+        ],
+      });
+      if (!task) {
+        return res.status(404).send({
+          error: "Tâche non trouvée ou ne fait pas partie de cette colocation.",
+        });
+      }
+      const objective = await db.objective.findByPk(task.objective_id);
+      if (!objective) {
+        return res.status(404).send({ error: "Objectif non trouvé." });
+      }
+      await objective.reload();
+
+      // Vérifier si l'utilisateur appartient à la colocation et à l'objectif
+      const user = await db.user.findOne({
+        where: { id: userId, colocation_id: colocationId },
+      });
+      console.log("user", user);
+      if (!user) {
+        return res.status(404).send({
+          error: "Utilisateur non trouvé ou n'appartient pas à la colocation.",
+        });
+      }
+
+      // Retirer l'utilisateur de l'objectif de la tâche
+      await objective.removeAssigned_users(user);
+      res.send({ message: "Utilisateur retiré de la tâche avec succès." });
+    } catch (error) {
+      console.error(error);
+      res
+        .status(500)
+        .send({ error: "Erreur lors du retrait de l'utilisateur." });
     }
   },
 };

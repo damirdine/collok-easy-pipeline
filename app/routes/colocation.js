@@ -1,7 +1,57 @@
 import express from "express";
-import * as colocationController from "../controllers/colocationController.js";
-
+import colocationController from "../controllers/colocationController.js";
+import colocationValidation from "../middleware/validations/colocation.js";
 const colocationRouter = express.Router();
+
+
+colocationRouter.get(
+  "/",
+  colocationController.getColocations
+  );
+
+colocationRouter.get(
+  "/:colocationID",
+  colocationValidation.validateGetColocationById,
+  colocationController.getColocationById
+  );
+
+colocationRouter.post(
+  "/",
+  colocationValidation.validateCreateColocation,
+  colocationController.createColocation
+  );
+
+colocationRouter.put(
+    "/:colocationID",
+    colocationValidation.validateUpdateColocationName,
+    colocationController.updateColocationName
+  );
+
+colocationRouter.get(
+  "/:colocationID/admin/",
+  colocationValidation.validateGetColocationAdmin,
+  colocationController.getColocationAdmin
+);
+
+colocationRouter.put(
+  "/:colocationID/admin",
+  colocationValidation.validateUpdateColocationAdmin,
+  colocationController.updateColocationAdmin
+);
+
+colocationRouter.put(
+  "/:colocationID/members",
+  colocationValidation.validateAddColocationMember,
+  colocationController.addColocationMember
+);
+
+colocationRouter.delete(
+  "/:colocationID/members/",
+  colocationValidation.validateDeleteColocationMember,
+  colocationController.deleteColocationMember
+);
+export default colocationRouter;
+
 
 /**
  * @swagger
@@ -17,6 +67,8 @@ const colocationRouter = express.Router();
  *     summary: Get all colocations
  *     description: Retrieve a list of all available colocations.
  *     tags: [Colocation]
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: Successful response
@@ -47,11 +99,6 @@ const colocationRouter = express.Router();
  *               error: Internal Server Error
  */
 
-
-colocationRouter.get(
-  "/", 
-  colocationController.getColocations);
-
   /**
  * @swagger
  * /api/v1/colocation/{colocationID}:
@@ -59,6 +106,8 @@ colocationRouter.get(
  *     summary: Get colocation by ID
  *     description: Retrieve information about a specific colocation by its ID.
  *     tags: [Colocation]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: colocationID
@@ -93,10 +142,6 @@ colocationRouter.get(
  *               error: Internal Server Error
  */
 
-colocationRouter.get(
-  "/:colocationID",
-  colocationController.getColocationById);
-
   /**
  * @swagger
  * /api/v1/colocation:
@@ -104,6 +149,8 @@ colocationRouter.get(
  *     summary: Create a new colocation
  *     description: Create a new colocation with the provided information.
  *     tags: [Colocation]
+ *     security:
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -138,25 +185,28 @@ colocationRouter.get(
  *               error: Internal Server Error
  */
 
-colocationRouter.post(
-  "/",
-   colocationController.createColocation);
-// Faire une update one pour changer les infos ?
-
-/**
+  /**
  * @swagger
- * /api/v1/colocation/admin/{adminUserId}:
- *   get:
- *     summary: Get colocation by admin ID
- *     description: Retrieve information about the colocation associated with a specific admin user.
+ * /api/v1/colocation/{colocationID}:
+ *   put:
+ *     summary: Update colocation name
+ *     description: Update the name of a specific colocation.
  *     tags: [Colocation]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
- *         name: adminUserId
+ *         name: colocationID
  *         schema:
  *           type: string
  *         required: true
- *         description: ID of the admin user
+ *         description: ID of the colocation
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           example:
+ *             name: "New Colocation Name"
  *     responses:
  *       200:
  *         description: Successful response
@@ -164,12 +214,62 @@ colocationRouter.post(
  *           application/json:
  *             example:
  *               data: {
- *                 "id": 8,
- *                 "createdAt": "2023-12-21T10:09:45.000Z",
- *                 "updatedAt": "2023-12-21T10:09:45.000Z",
- *                 "name": "My Colocation bis encore plus",
+ *                 "id": 5,
+ *                 "createdAt": "2023-12-21T09:38:19.000Z",
+ *                 "updatedAt": "2023-12-21T09:38:19.000Z",
+ *                 "name": "New Colocation Name",
  *                 "admin_user_id": 8
  *               }
+ *       404:
+ *         description: Colocation not found
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Colocation not found
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Internal Server Error
+ */
+
+/**
+ * @swagger
+ * /api/v1/colocation/{colocationID}/admin/:
+ *   get:
+ *     summary: Get colocation admin
+ *     description: Retrieve information about the colocation associated with a specific admin user.
+ *     tags: [Colocation]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: colocationID
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the colocation
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             example:
+ *               data:
+ *                 id: 2
+ *                 createdAt: "2023-12-21T09:38:19.000Z"
+ *                 updatedAt: "2023-12-21T12:43:11.000Z"
+ *                 firstname: "User2"
+ *                 lastname: "Lastname2"
+ *                 email: "user2@example.com"
+ *                 password: "password"
+ *                 birthday: null
+ *                 phone: null
+ *                 pseudo: null
+ *                 gender: null
+ *                 avatar: null
+ *                 colocation_id: null
  *       404:
  *         description: Colocation not found for admin user
  *         content:
@@ -184,10 +284,6 @@ colocationRouter.post(
  *               error: Internal Server Error
  */
 
-colocationRouter.get(
-  "/admin/:adminUserId",
-  colocationController.getColocationByAdmin
-);
 
 /**
  * @swagger
@@ -196,6 +292,8 @@ colocationRouter.get(
  *     summary: Update colocation admin
  *     description: Update the admin user of a specific colocation.
  *     tags: [Colocation]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: colocationID
@@ -208,7 +306,7 @@ colocationRouter.get(
  *       content:
  *         application/json:
  *           example:
- *             newAdminID: 2
+ *             user_id: 2
  *     responses:
  *       200:
  *         description: Successful response
@@ -236,10 +334,6 @@ colocationRouter.get(
  *               error: Internal Server Error
  */
 
-colocationRouter.put(
-  "/:colocationID/admin",
-  colocationController.updateColocationAdmin
-);
 
 /**
  * @swagger
@@ -248,6 +342,8 @@ colocationRouter.put(
  *     summary: Add colocation member
  *     description: Add a member to a specific colocation.
  *     tags: [Colocation]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: colocationID
@@ -296,18 +392,16 @@ colocationRouter.put(
  *               error: Internal Server Error
  */
 
-colocationRouter.put(
-  "/:colocationID/members",
-  colocationController.addColocationMember
-);
 
 /**
  * @swagger
- * /api/v1/colocation/{colocationID}/members/{userID}:
+ * /api/v1/colocation/{colocationID}/members/:
  *   delete:
  *     summary: Remove colocation member
  *     description: Remove a member from a specific colocation.
  *     tags: [Colocation]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: path
  *         name: colocationID
@@ -343,8 +437,3 @@ colocationRouter.put(
  *               error: Internal Server Error
  */
 
-colocationRouter.delete(
-  "/:colocationID/members/:userID",
-  colocationController.deleteColocationMember
-);
-export default colocationRouter;

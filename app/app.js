@@ -19,9 +19,11 @@ app.use(morgan("tiny"));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/v1", apiV1Router);
 
-// app.use("/api", apiRouter)
+if (process.env.NODE_ENV !== "test") {
+  // Démarrage du serveur sur le port 3000
+  app.listen(3000, () => {
+    console.log("Server is running on port 3000");
+  });
+}
 
-// Démarrage du serveur sur le port 3000
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
-});
+export default app;

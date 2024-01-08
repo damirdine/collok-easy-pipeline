@@ -26,44 +26,45 @@ taskRouter.get("/:colocationId/tasks", tasksController.getTasksByColocation);
  *         description: List of tasks in the specified colocation
  *         content:
  *           application/json:
- *             example: [
- *               {
- *                 "id": 2,
- *                 "createdAt": "2023-12-21T09:56:07.000Z",
- *                 "updatedAt": "2023-12-21T09:56:07.000Z",
- *                 "estimated_duration": 2,
- *                 "objective_id": 7,
- *                 "objective": {
- *                   "id": 7,
- *                   "createdAt": "2023-12-21T09:56:07.000Z",
- *                   "updatedAt": "2023-12-21T09:56:07.000Z",
- *                   "name": "Objective 7",
- *                   "description": null,
- *                   "deadline": null,
- *                   "colocation_id": 1,
- *                   "created_by": 7,
- *                   "is_completed": false
+ *             example:
+ *               data: [
+ *                 {
+ *                   "id": 2,
+ *                   "createdAt": "2023-12-22T13:51:50.000Z",
+ *                   "updatedAt": "2023-12-22T13:51:50.000Z",
+ *                   "estimated_duration": 1,
+ *                   "objective_id": 7,
+ *                   "objective": {
+ *                     "id": 7,
+ *                     "createdAt": "2023-12-22T13:51:50.000Z",
+ *                     "updatedAt": "2023-12-22T13:51:50.000Z",
+ *                     "name": "Objective 7",
+ *                     "description": null,
+ *                     "deadline": null,
+ *                     "colocation_id": 1,
+ *                     "created_by": 7,
+ *                     "is_completed": false
+ *                   }
+ *                 },
+ *                 {
+ *                   "id": 4,
+ *                   "createdAt": "2023-12-22T13:51:50.000Z",
+ *                   "updatedAt": "2023-12-22T13:51:50.000Z",
+ *                   "estimated_duration": 2,
+ *                   "objective_id": 9,
+ *                   "objective": {
+ *                     "id": 9,
+ *                     "createdAt": "2023-12-22T13:51:50.000Z",
+ *                     "updatedAt": "2023-12-22T13:51:50.000Z",
+ *                     "name": "Objective 9",
+ *                     "description": null,
+ *                     "deadline": null,
+ *                     "colocation_id": 1,
+ *                     "created_by": 9,
+ *                     "is_completed": false
+ *                   }
  *                 }
- *               },
- *               {
- *                 "id": 4,
- *                 "createdAt": "2023-12-21T09:56:07.000Z",
- *                 "updatedAt": "2023-12-22T08:41:14.000Z",
- *                 "estimated_duration": 10,
- *                 "objective_id": 9,
- *                 "objective": {
- *                   "id": 9,
- *                   "createdAt": "2023-12-21T09:56:07.000Z",
- *                   "updatedAt": "2023-12-22T08:40:15.000Z",
- *                   "name": "salle de bain",
- *                   "description": null,
- *                   "deadline": null,
- *                   "colocation_id": 1,
- *                   "created_by": 9,
- *                   "is_completed": true
- *                 }
- *               }
- *             ]
+ *               ]
  *       403:
  *         description: Access denied to this colocation
  *         content:
@@ -107,30 +108,34 @@ taskRouter.get("/:colocationId/tasks/:taskId", tasksController.getTask);
  *         description: Detailed information about the task
  *         content:
  *           application/json:
- *             example:
- *               id: 2
- *               createdAt: "2023-12-21T09:56:07.000Z"
- *               updatedAt: "2023-12-21T09:56:07.000Z"
- *               estimated_duration: 2
- *               objective_id: 7
- *               objective:
- *                 name: "Objective 7"
- *                 deadline: null
- *                 created_by: 7
- *                 is_completed: false
- *                 assigned_users:
- *                   - id: 1
- *                     firstname: "User1"
- *                     lastname: "Lastname1"
- *                     avatar: null
- *                   - id: 5
- *                     firstname: "User5"
- *                     lastname: "Lastname5"
- *                     avatar: null
- *                   - id: 7
- *                     firstname: "User7"
- *                     lastname: "Lastname7"
- *                     avatar: null
+*             example: 
+ *               data: {
+ *                 "id": 2,
+ *                 "createdAt": "2023-12-22T13:51:50.000Z",
+ *                 "updatedAt": "2023-12-22T13:51:50.000Z",
+ *                 "estimated_duration": 1,
+ *                 "objective_id": 7,
+ *                 "objective": {
+ *                   "name": "Objective 7",
+ *                   "deadline": null,
+ *                   "created_by": 7,
+ *                   "is_completed": false,
+ *                   "assigned_users": [
+ *                     {
+ *                       "id": 1,
+ *                       "firstname": "User1",
+ *                       "lastname": "Lastname1",
+ *                       "avatar": null
+ *                     },
+ *                     {
+ *                       "id": 13,
+ *                       "firstname": "Elena",
+ *                       "lastname": "Doe",
+ *                       "avatar": "https://example.com/avatar.jpg"
+ *                     }
+ *                   ]
+ *                 }
+ *               }
  *       404:
  *         description: Task not found in this colocation
  *         content:

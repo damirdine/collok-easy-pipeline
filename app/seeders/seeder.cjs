@@ -74,7 +74,9 @@ module.exports = {
     for (let i = 0; i < 5; i++) {
       outgoings.push({
         id: i + 1,
-        final_expense: Math.random() * 100,
+        final_expense: parseInt(
+          Math.floor(Math.random() * (9999 - 100 + 1)) + 100
+        ),
         created_at: new Date(),
         updated_at: new Date(),
         objective_id: i + 1,

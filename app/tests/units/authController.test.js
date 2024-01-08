@@ -1,4 +1,4 @@
-import authController from "../../controllers/authController";
+import { auth } from "../../controllers/authController";
 
 const models = {
   user: {
@@ -24,7 +24,7 @@ const models = {
 
 describe("Name of the group", () => {
   test("should ", async () => {
-    const { login } = authController({ models });
+    const { login } = auth(models);
     const req = {
       body: {
         email: "email@ecample",

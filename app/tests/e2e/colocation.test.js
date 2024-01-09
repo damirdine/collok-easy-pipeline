@@ -2,7 +2,6 @@ import request from "supertest";
 import server from "./utils";
 
 const API_BASE_URL = "/api/v1";
-server.listen(3002);
 
 let authToken = "";
 
@@ -36,41 +35,39 @@ describe("getColocations", () => {
     });
 });
 
-// describe("createColocation", () => {
-//     test("should create a new colocation", async () => {
-//     const colocationData = {
-//         name: "Nouvelle Colocation",
-//         admin_user_id: 1,
-//     };
+ describe("createColocation", () => {
+     test("should create a new colocation", async () => {
+     const colocationData = {
+         name: "Nouvelle Colocation",
+         admin_user_id: 1,
+     };
 
-//     const response = await request(server)
-//         .post(API_BASE_URL + "/colocation")
-//         .set("Authorization", `Bearer ${authToken}`)
-//         .send(colocationData)
-//         .expect("Content-Type", /json/)
-//         .expect(201);
+     const response = await request(server)
+         .post(API_BASE_URL + "/colocation")
+         .set("Authorization", `Bearer ${authToken}`)
+         .send(colocationData)
+         .expect("Content-Type", /json/)
+         .expect(201);
+ 
 
-    
-//     expect(response.body).toHaveProperty("data");
-//     expect(response.body.data.name).toBe(colocationData.name);
-//     expect(response.body.data.admin_user_id).toBe(colocationData.admin_user_id);
-//     });
+     expect(response.body).toHaveProperty("data");
+     expect(response.body.data.name).toBe(colocationData.name);
+     expect(response.body.data.admin_user_id).toBe(colocationData.admin_user_id);
+     });
 
-//     test("should return 500 if data is invalid", async () => {
-//     const invalidColocationData = {
-//         // Données invalides pour provoquer une erreur
-//     };
+     test("should return 400 if data is invalid", async () => {
+     const invalidColocationData = {
+      name: "Nouvelle Colocation avec beaucoup trop de caractère pour provoquer une erreur 400",
+      admin_user_id: 2,
+     };
 
-//     const response = await request(server)
-//         .post(API_BASE_URL + "/colocations")
-//         .set("Authorization", `Bearer ${authToken}`)
-//         .send(invalidColocationData)
-//         .expect("Content-Type", /json/)
-//         .expect(500);
+     const response = await request(server)
+         .post(API_BASE_URL + "/colocation")
+         .set("Authorization", `Bearer ${authToken}`)
+         .send(invalidColocationData)
+         .expect(400);
 
-//       // Ajoute ici des assertions spécifiques à la réponse si nécessaire
-//       expect(response.body).toHaveProperty("error");
-//     });
-//   });
+       expect(response.body).toHaveProperty("error");
+     });
+   });
 
-server.close();
